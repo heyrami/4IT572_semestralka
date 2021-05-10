@@ -35,8 +35,7 @@ jobs:
             echo "$AWS_ACCESS_KEY_ID"
             echo "$AWS_SECRET_ACCESS_KEY"
             echo "$AWS_SECURITY_TOKEN"
-            ls -la
-            pwd
+            ansible_playbook ec2_deploy.yml --user ubuntu --ssh-common-args='-o StrictHostKeyChecking=no'
           
 workflows:
   version: 2.1
