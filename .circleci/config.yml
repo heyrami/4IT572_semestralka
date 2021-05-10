@@ -11,8 +11,44 @@ jobs:
       - run: npm install
       - run: npm run test
       - run: npm build
+      - persist_to_workspace:
+          root: .
+          paths:
+           - .
+  deploy:
+    docker:
+      - image: circleci/python:3.7.7
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sudo apt -y update
+      - run: sudo apt -y install python3-pip
+      - run: pip3 install --upgrade pip
+      - run: pip3 install boto3 boto ansible
+      - run: 
+          name: ansible config
+          command: git clone https://github.com/heyrami/4IT572_ansible.git
+      
+      - run: 
+          name: eshop
+          command: |
+            export AWS_ACCESS_KEY_ID=$accesskey
+            export AWS_SECRET_ACCESS_KEY=$secretkey
+            export AWS_SECURITY_TOKEN=$securitytoken
+            echo "$AWS_ACCESS_KEY_ID"
+            echo "$AWS_SECRET_ACCESS_KEY"
+            echo "$AWS_SECURITY_TOKEN"
+            ls -l
+            ansible-playbook 4IT572_ansible/ec2_deploy.yml --user ubuntu --ssh-common-args='-o StrictHostKeyChecking=no'
+          
 workflows:
   version: 2.1
   build:
     jobs:
       - build
+      - deploy:
+         requires:
+            - build
+         filters:
+           branches:
+              only: main
