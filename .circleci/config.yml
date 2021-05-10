@@ -11,10 +11,16 @@ jobs:
       - run: npm install
       - run: npm run test
       - run: npm build
+      - persist_to_workspace:
+          root: .
+          paths:
+           - .
   deploy:
     docker:
       - image: circleci/python:3.7.7
     steps:
+      - attach_workspace:
+          at: .
       - run: sudo apt -y update
       - run: sudo apt -y install python3-pip
       - run: pip3 install --upgrade pip
@@ -29,6 +35,8 @@ jobs:
             echo "$AWS_ACCESS_KEY_ID"
             echo "$AWS_SECRET_ACCESS_KEY"
             echo "$AWS_SECURITY_TOKEN"
+            ls -la
+            pwd
           
 workflows:
   version: 2.1
