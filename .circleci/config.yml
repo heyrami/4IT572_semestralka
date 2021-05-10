@@ -11,10 +11,15 @@ jobs:
       - run: npm install
       - run: npm run test
       - run: npm build
+  deploy:
+    docker:
+      - image: circleci/python:3.7.7
+    steps:
       - run: sudo apt -y update
       - run: sudo apt -y install python3-pip
-      - run: pip3 install --upgrade pip3
+      - run: pip3 install --upgrade pip
       - run: pip3 install boto3 boto ansible
+      
       - run: 
           name: eshop
           command: |
