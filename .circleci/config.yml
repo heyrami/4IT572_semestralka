@@ -25,6 +25,9 @@ jobs:
       - run: sudo apt -y install python3-pip
       - run: pip3 install --upgrade pip
       - run: pip3 install boto3 boto ansible
+      - run: 
+          name: ansible config
+          command: git clone https://github.com/heyrami/4IT572_ansible.git
       
       - run: 
           name: eshop
@@ -35,7 +38,8 @@ jobs:
             echo "$AWS_ACCESS_KEY_ID"
             echo "$AWS_SECRET_ACCESS_KEY"
             echo "$AWS_SECURITY_TOKEN"
-            ansible-playbook ec2_deploy.yml --user ubuntu --ssh-common-args='-o StrictHostKeyChecking=no'
+            ls -l
+            ansible-playbook 4IT572_ansible/ec2_deploy.yml --user ubuntu --ssh-common-args='-o StrictHostKeyChecking=no'
           
 workflows:
   version: 2.1
